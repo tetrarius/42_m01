@@ -6,32 +6,32 @@
 /*   By: aravakia <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 09:53:12 by aravakia          #+#    #+#             */
-/*   Updated: 2026/03/11 10:43:42 by aravakia         ###   ########.fr       */
+/*   Updated: 2026/03/12 12:47:17 by aravakia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_check_format(va_list f, char c)
+int	ft_check_format(va_list args, char c)
 {
 	int	count;
 
 	count = 0;
 	if (c == 'c')
-		count = count + ft_print_char(f);
+		count = count + ft_print_char(args);
 	else if (c == 's')
-		count = count + ft_print_string(f);
+		count = count + ft_print_string(args);
 	else if (c == 'p')
-		count = count + ft_print_pointer(f);
+		count = count + ft_print_pointer(args);
 	else if (c == 'd' || c == 'i')
-		count = count + ft_print_number(f);
+		count = count + ft_print_number(args);
 	else if (c == 'u')
-		count = count + ft_print_unsigned_number(f);
+		count = count + ft_print_unsigned_number(args);
 	else if (c == 'x')
-		count = count + ft_print_hex(f);
+		count = count + ft_print_hex(args);
 	else if (c == 'X')
-		count = count + ft_print_HEX(f);
+		count = count + ft_print_hex_upper(args);
 	else if (c == '%')
-		count = count + ft_print_ss(f);
+		count = count + ft_print_ss(args);
 	return (count);
 }

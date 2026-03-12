@@ -1,40 +1,43 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_print_chars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aravakia <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/10 13:09:46 by aravakia          #+#    #+#             */
-/*   Updated: 2026/03/12 10:23:25 by aravakia         ###   ########.fr       */
+/*   Created: 2026/03/12 10:29:41 by aravakia          #+#    #+#             */
+/*   Updated: 2026/03/12 10:52:10 by aravakia         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-int	ft_printf(const char *format, ...)
+int	ft_print_char(va_list args)
 {
-	int		count;
-	int		i;
-	va_list	args;
+	int	c;
 
-	count = 0;
-	i = 0;
-	va_start(args, format);
-	while (format[i])
+	c = va_arg(args, int);
+	ft_putchar_fd(c, 1);
+	return (1);
+}
+
+int	ft_print_ss(va_list args)
+{
+	(void)args;
+	ft_putchar_fd('%', 1);
+	return (1);
+}
+
+int	ft_print_string(va_list args)
+{
+	char	*str;
+
+	str = va_arg(args, char *);
+	if (!str)
 	{
-		if (format[i] == '%')
-		{
-			i++;
-			count = count + ft_check_format(args, format[i]);
-		}
-		else
-		{
-			ft_putchar_fd(format[i], 1);
-			count++;
-		}
-		i++;
+		ft_putstr_fd("(null)", 1);
+		return (6);
 	}
-	va_end(args);
-	return (count);
+	ft_putstr_fd(str, 1);
+	return (ft_strlen(str));
 }
