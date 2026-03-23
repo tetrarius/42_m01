@@ -1,81 +1,66 @@
-# Libft
 *This project has been created as part of the 42 curriculum by aravakia.*
 
----
+# ft_printf
 
-## Description 
+## Description
+Because `ft_putstr` and `ft_putnbr` are not enough, a proper `printf` is much better! 
 
-Libft is a personal C library that reimplements a set of standard libc functions, additional useful functions, and linked list operations.  
-It helps understand how standard C functions work under the hood and allows you to use your own library in future assignments.
+The goal of this project is to recode our own version of the standard C library `printf` function. This project introduces the concept of variadic functions in C (functions that accept a variable number of arguments) and helps build a solid understanding of string parsing and output formatting. 
 
+The `ft_printf` function mimics the behavior of the original `printf` and successfully handles the following format specifiers:
+* `%c` — Prints a single character.
+* `%s` — Prints a string.
+* `%p` — Prints a pointer address in hexadecimal format.
+* `%d` & `%i` — Prints a decimal (base 10) number.
+* `%u` — Prints an unsigned decimal (base 10) number.
+* `%x` & `%X` — Prints a number in lowercase or uppercase hexadecimal (base 16).
+* `%%` — Prints a percent sign.
 
-## Project Goal 
+## Algorithm and Data Structure
+To maintain clean architecture and comply with the 42 Norm (which forbids `switch/case` statements and limits functions to 25 lines), the project relies on a **Modular Dispatcher Algorithm** and the `va_list` structure.
 
-- Reimplement libc functions with the `ft_` prefix.  
-- Create useful string, memory, and linked list manipulation functions.  
-- Understand memory allocation, pointers, and linked list operations.  
+**Data Structure:** The core structure used is `va_list` from the `<stdarg.h>` library, which allows iterating through an unknown number of arguments dynamically using `va_start`, `va_arg`, and `va_end`.
 
+**Algorithm:**
+1. **Parsing:** The main function iterates through the `format` string character by character. Regular characters are printed immediately, and a counter is incremented.
+2. **Dispatching:** Upon encountering a `%` symbol, the parsing pauses, and the next character is passed to a dispatcher function (`ft_check_format`). This function uses an `if / else if` chain to route the argument to a specific helper function (e.g., `ft_print_hex`, `ft_print_string`).
+3. **Base Conversion via Recursion & Arrays:** For numeric and hexadecimal conversions, the algorithm uses a recursive approach combined with a character array (e.g., `char *base = "0123456789abcdef";`). It divides the number by the target base (10 or 16) recursively until it reaches the most significant digit, then uses the modulo operator (`n % base`) as an index to print the correct character from the base array.
+4. **Return Value:** Each helper function calculates the exact length of the printed string/number and returns it to the main loop, ensuring `ft_printf` returns the total number of characters printed, just like the original libc function.
 
-## Instructions 
+## Instructions
+The project is compiled into a static library (`libftprintf.a`) and includes an integrated `libft` module.
 
-### Compilation
+**1. Compilation:**
+Run the following command at the root of the repository to compile the project. The `Makefile` will automatically navigate to the `libft` directory, compile it, and link everything together.
 
-To compile the library, run:
+    make
 
-make
+*(Other available rules: `make clean` to remove object files, `make fclean` to remove objects and the library, and `make re` to recompile from scratch).*
 
-The library is compiled using the provided Makefile and the `cc` compiler with the following flags:
- 
- -Wall -Wextra -Werror
+**2. Usage:**
+Include the header file in your C code:
 
+    #include "ft_printf.h"
 
-This will generate the static library file `libft.a` at the root of the repository.
+    int main(void)
+    {
+        ft_printf("Hello %s! The answer is %d, or %X in HEX.\n", "World", 42, 42);
+        return (0);
+    }
 
-### Makefile rules
+Compile your program alongside the library:
 
-- make / make all  : To compile the library
-- make clean  : Remove object files
-- make fclean  : Remove object files and the library
-- make re : Recompile everything
+    cc -Wall -Wextra -Werror main.c libftprintf.a -o my_program
+    ./my_program
 
+## Resources
+**Classic References:**
+* `man 3 printf` — Official documentation for the standard printf behavior.
+* [GNU C Manual: Variadic Functions](https://www.gnu.org/software/libc/manual/html_node/Variadic-Functions.html) — Understanding `<stdarg.h>`.
+* Numeric base conversion logic and C standard data types limits.
 
-## Tasks Completed
-
----
-Library Content
-
-1. Part 1 — Standard C Library Reimplementations:
-
-Recreations of commonly used C standard functions such as:
-
-    ft_strlen, ft_strchr, ft_strncmp, ft_strlcpy, ft_strdup
-    ft_atoi, ft_isalpha, ft_isdigit, ft_isalnum, ft_toupper
-    ft_memset, ft_memcpy, ft_memmove, ft_bzero, ft_calloc
-
-2. Part 2 — Additional Utility Functions
-
-Functions that are not part of the standard C library but are highly useful:
-
-    ft_substr, ft_strjoin, ft_strtrim, ft_split
-    ft_itoa, ft_strmapi, ft_striteri, ft_putchar_fd
-    ft_putstr_fd, ft_putendl_fd, ft_putnbr_fd
-
-3. Part 3— Linked List Functions
-
-Linked list functions:
-
-    ft_lstnew, ft_lstadd_front, ft_lstsize, ft_lstlast
-    ft_lstadd_back, ft_lstdelone, ft_lstclear, ft_lstiter, ft_lstmap
----
-
-## Resources 
-
-- How Linux Works. Brain Ward
-- Linux manual pages (man 3)
-- C Programming Language. Brain Kernighan, Dennis Ritchie
-- GNU C Library documentation
-- W3Schools.com
-- 42 intranet Libft subject
-- google search resources
-- peer on the right peer on the left and someone smart in the building
-- AI tools were used only for search resources
+**Usage of AI:**
+An AI assistant (LLM) was utilized during the development of this project strictly as a debugging and educational tool ("rubber duck" debugging). Specifically, AI was used for:
+1. **Makefile structuring:** Assisting with the correct syntax for compiling nested directories (using the `make -C` flag to compile the integrated `libft`).
+2. **Norminette compliance:** Identifying the root cause of formatting errors like `MISALIGNED_VAR_DECL` and `FORBIDDEN_CHAR_NAME`.
+3. **Conceptualizing logic:** Brainstorming the most elegant way to handle hex conversions without hardcoding multiple conditions, leading to the array indexing approach (`base[n % 16]`). The actual implementation and code writing were done manually.

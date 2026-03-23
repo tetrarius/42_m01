@@ -1,31 +1,38 @@
 #include "ft_printf.h"
-#include <stdio.h> // Обязательно для оригинального printf
+#include <stdio.h>
 
-int main(void)
+int	main(void)
 {
-    int ft_len;
-    int std_len;
-    int num = 255;
+    int	ft_ret;
+    int	std_ret;
 
-    printf("=== ТЕСТ 1: Строки и символы ===\n");
-    ft_len = ft_printf("FT : Привет, %s! Символ: %c\n", "Школа 42", 'X');
-    std_len = printf("STD: Привет, %s! Символ: %c\n", "Школа 42", 'X');
-    printf("Длина -> FT: %d | STD: %d\n\n", ft_len, std_len);
+    printf("=== ТЕСТ 1: NULL строка (%%s) ===\n");
+    // Оригинальный printf на Linux печатает "(null)", проверим твой!
+    ft_ret = ft_printf("FT : %s\n", (char *)NULL);
+    std_ret = printf("STD: %s\n", (char *)NULL);
+    printf("Return -> FT: %d | STD: %d\n\n", ft_ret, std_ret);
 
-    printf("=== ТЕСТ 2: Числа ===\n");
-    ft_len = ft_printf("FT : int: %d, Отрицательное: %i, Беззнаковое: %u\n", 42, -42, 4294967295U);
-    std_len = printf("STD: int: %d, Отрицательное: %i, Беззнаковое: %u\n", 42, -42, 4294967295U);
-    printf("Длина -> FT: %d | STD: %d\n\n", ft_len, std_len);
+    printf("=== ТЕСТ 2: NULL указатель (%%p) ===\n");
+    // Должен напечатать "(nil)" на Linux
+    ft_ret = ft_printf("FT : %p\n", NULL);
+    std_ret = printf("STD: %p\n", NULL);
+    printf("Return -> FT: %d | STD: %d\n\n", ft_ret, std_ret);
 
-    printf("=== ТЕСТ 3: Шестнадцатеричные и Указатели ===\n");
-    ft_len = ft_printf("FT : hex: %x, HEX: %X, Указатель: %p\n", num, num, &num);
-    std_len = printf("STD: hex: %x, HEX: %X, Указатель: %p\n", num, num, &num);
-    printf("Длина -> FT: %d | STD: %d\n\n", ft_len, std_len);
+    printf("=== ТЕСТ 3: Ноль в HEX (%%x и %%X) ===\n");
+    // Должен вывести просто "0", а не пустую строку
+    ft_ret = ft_printf("FT : %x %X\n", 0, 0);
+    std_ret = printf("STD: %x %X\n", 0, 0);
+    printf("Return -> FT: %d | STD: %d\n\n", ft_ret, std_ret);
 
-    printf("=== ТЕСТ 4: Процент ===\n");
-    ft_len = ft_printf("FT : 100%%\n");
-    std_len = printf("STD: 100%%\n");
-    printf("Длина -> FT: %d | STD: %d\n\n", ft_len, std_len);
+    printf("=== ТЕСТ 4: Подряд идущие проценты (%%%%) ===\n");
+    ft_ret = ft_printf("FT : %%%%%%\n"); // Ожидаем печать трех знаков %
+    std_ret = printf("STD: %%%%%%\n");
+    printf("Return -> FT: %d | STD: %d\n\n", ft_ret, std_ret);
+
+    printf("=== ТЕСТ 5: Мульти-комбо ===\n");
+    ft_ret = ft_printf("FT : %c %s %p %d %i %u %x %X %%\n", 'A', "42", (void *)0x42, 42, -42, 42, 42, 42);
+    std_ret = printf("STD: %c %s %p %d %i %u %x %X %%\n", 'A', "42", (void *)0x42, 42, -42, 42, 42, 42);
+    printf("Return -> FT: %d | STD: %d\n\n", ft_ret, std_ret);
 
     return (0);
 }
